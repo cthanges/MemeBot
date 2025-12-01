@@ -1,4 +1,11 @@
 import discord
+import requests
+import json
+
+def get_meme():
+    response = requests.get('https://meme-api.com/gimme') # Fetch meme from API
+    json_data = json.loads(response.text)
+    return json_data['url']
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -7,9 +14,8 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         if message.author == self.user:
             return
-            
-        if message.content.startswith('$hello'):
-            await message.channel.send('Hello World!') # Respond with 'Hello World!' when $hello is invoked
+        if message.content.startswith('$meme'):
+            await message.channel.send(get_meme()) # Call the meme function
 
 intents = discord.Intents.default()
 intents.message_content = True
